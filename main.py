@@ -26,11 +26,11 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# === Qdrant + Embedder ===
+#Qdrant + Embedder
 qdrant = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 embed_model = SentenceTransformer(EMBEDDING_MODEL)
 
-# === Dummy in-memory user DB ===
+#Dummy in-memory user DB
 VALID_USERS = {"admin": "admin123"}
 sessions = {}
 
@@ -40,7 +40,7 @@ def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Not authenticated")
     return username
 
-# === Login Page ===
+#Login Page
 @app.get("/", response_class=HTMLResponse)
 def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "error": None})
@@ -55,10 +55,10 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
     else:
         return templates.TemplateResponse("login.html", {
             "request": request,
-            "error": "❌ Invalid credentials. Please try again or sign up."
+            "error": "Invalid credentials. Please try again or sign up."
         })
 
-# === Signup Page ===
+#Signup Page
 @app.get("/signup", response_class=HTMLResponse)
 def signup_form(request: Request):
     return templates.TemplateResponse("signup.html", {"request": request, "error": None})
@@ -77,7 +77,7 @@ def signup(request: Request, username: str = Form(...), password: str = Form(...
     response.set_cookie("username", username)
     return response
 
-# === Logout ===
+#Logout
 @app.get("/logout")
 def logout(request: Request):
     username = request.cookies.get("username")
@@ -86,12 +86,12 @@ def logout(request: Request):
     response.delete_cookie("username")
     return response
 
-# === Home Page ===
+#Home Page
 @app.get("/home", response_class=HTMLResponse)
 def home(request: Request, user: str = Depends(get_current_user)):
     return templates.TemplateResponse("home.html", {"request": request, "user": user})
 
-# === Ask Endpoint ===
+#Ask Endpoint
 @app.post("/ask", response_class=HTMLResponse)
 def ask(request: Request, question: str = Form(...), user: str = Depends(get_current_user)):
     # create embedding (ensure convert to plain python list)

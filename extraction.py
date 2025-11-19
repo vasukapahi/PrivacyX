@@ -134,12 +134,12 @@ def main():
         try:
             ok = process_pdf_file(pdf_path, text_path, fail_log)
             if not ok:
-                tqdm.write(f"❌ Failed to extract: {filename} (see {fail_log})")
+                tqdm.write(f" Failed to extract: {filename} (see {fail_log})")
         except Exception as e:
             # unexpected top-level error: log it and continue
             with open(fail_log, "a", encoding="utf-8") as efile:
                 efile.write(f"{pdf_path}: unexpected exception: {repr(e)}\n")
-            tqdm.write(f"❌ Unexpected error for {filename}: {e}")
+            tqdm.write(f" Unexpected error for {filename}: {e}")
 
 if __name__ == "__main__":
     main()
